@@ -3,8 +3,7 @@ import { Loader } from '../Loader/Loader';
 import { getPeople } from '../../api';
 import { Person } from '../../types';
 import { useParams } from 'react-router-dom';
-import classNames from 'classnames';
-import { PersonLink } from '../PersonLink';
+import { PeopleTable } from './PeopleTable';
 
 export const PeoplePage: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -47,76 +46,7 @@ export const PeoplePage: React.FC = () => {
             <p data-cy="noPeopleMessage">There are no people on the server</p>
           )}
 
-          {peopleExist && (
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Sex</th>
-                  <th>Born</th>
-                  <th>Died</th>
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {people?.map(person => {
-                  const motherExist = people.find(
-                    pers => pers.name === person.motherName,
-                  );
-                  const fatherExist = people.find(
-                    pers => pers.name === person.fatherName,
-                  );
-
-                  return (
-                    <tr
-                      data-cy="person"
-                      key={person.slug}
-                      className={classNames({
-                        'has-background-warning': person.slug === slug,
-                      })}
-                    >
-                      <td>
-                        <PersonLink person={person} />
-                      </td>
-
-                      <td>
-                        <a href="">{person.sex}</a>
-                      </td>
-                      <td>{person.born}</td>
-                      <td>{person.died}</td>
-                      <td>
-                        {person.motherName ? (
-                          motherExist ? (
-                            <PersonLink person={motherExist} />
-                          ) : (
-                            person.motherName
-                          )
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                      <td>
-                        {person.fatherName ? (
-                          fatherExist ? (
-                            <PersonLink person={fatherExist} />
-                          ) : (
-                            person.fatherName
-                          )
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
+          {peopleExist && <PeopleTable people={people} selectedSlug={slug} />}
         </div>
       </div>
     </>
